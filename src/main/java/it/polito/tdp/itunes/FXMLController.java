@@ -79,7 +79,10 @@ public class FXMLController {
     			this.txtResult.setText("Numero inserito nel formato sbagliato");
     		}
     		for (Album a : model.getBest()) {
-    			this.txtResult.appendText("\n"+a.toString());
+    			this.txtResult.appendText(a.toString()+"\n");
+    		}
+    		if(model.getBest().size()==0) {
+    			this.txtResult.appendText("Non ci sono cammini disponibili tra i due nodi.");
     		}
     	}
     }
@@ -118,7 +121,7 @@ public class FXMLController {
     }
     
     public void setCombos() {
-    	List<Album> albumi = new LinkedList<>(model.getGrafo().vertexSet());
+    	LinkedList<Album> albumi = new LinkedList<>(model.getGrafo().vertexSet());
     	Collections.sort(albumi);
     	for(Album a : albumi) {
     		this.cmbA1.getItems().add(a);

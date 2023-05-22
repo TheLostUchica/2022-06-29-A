@@ -77,11 +77,10 @@ public class Model {
 	}
 	
 	private LinkedList<Album> best;
-	private LinkedList<Album> parziale;
 	private int x;
 	private int Pb;
 	private Album arrivo;
-	int billone = 0;
+	int billone = -1;
 	
 	public void setX(int x) {
 		this.x = x;
@@ -96,7 +95,7 @@ public class Model {
 	}
 	
 	public void getPath(Album partenza, Album arrivo) {
-		parziale = new LinkedList<>();
+		LinkedList<Album> parziale = new LinkedList<>();
 		best = new LinkedList<>();
 		parziale.add(partenza);
 		int billy = 0;
