@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import it.polito.tdp.itunes.model.Album;
 import it.polito.tdp.itunes.model.Model;
+import it.polito.tdp.itunes.model.Vertice;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,10 +36,10 @@ public class FXMLController {
     private Button btnPercorso; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbA1"
-    private ComboBox<?> cmbA1; // Value injected by FXMLLoader
+    private ComboBox<Album> cmbA1; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbA2"
-    private ComboBox<?> cmbA2; // Value injected by FXMLLoader
+    private ComboBox<Album> cmbA2; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
@@ -51,7 +52,12 @@ public class FXMLController {
 
     @FXML
     void doCalcolaAdiacenze(ActionEvent event) {
-    	
+    	Album a = this.cmbA1.getValue();
+    	if(a!=null) {
+    		for(Vertice v : model.getAdiacenze(a)) {
+    			this.txtResult.appendText("\n"+v.toString());
+    		}
+    	}
     }
 
     @FXML
@@ -61,7 +67,17 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	
+    	String s = this.txtN.getText();
+    	if(s!=null) {
+    		try {
+    			int i = Integer.parseInt(s);
+    			model.CreaGrafo(i);
+    			this.setCombos();
+    			this.txtResult.setText("Creato un grafo con "+model.getGrafo().vertexSet().size()+" vertici e "+ model.getGrafo().edgeSet().size()+" archi");
+    		}catch(NumberFormatException e) {
+    			this.txtResult.setText("Numero inserito nel formato sbagliato");
+    		}
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -80,5 +96,12 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    }
+    
+    public void setCombos() {
+    	for(Album a : model.getGrafo().vertexSet()) {
+    		this.cmbA1.getItems().add(a);
+    		this.cmbA2.getItems().add(a);
+    	}
     }
 }

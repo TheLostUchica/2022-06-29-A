@@ -48,10 +48,10 @@ public class Model {
 		for (Album a : Graphs.successorListOf(this.graph, al)) {
 			int bilancio = 0;
 			for (DefaultWeightedEdge e : graph.outgoingEdgesOf(a)) {
-				bilancio += graph.getEdgeWeight(e);
+				bilancio -= graph.getEdgeWeight(e);
 			}
 			for (DefaultWeightedEdge e : graph.incomingEdgesOf(a)) {
-				bilancio -= graph.getEdgeWeight(e);
+				bilancio += graph.getEdgeWeight(e);
 			}
 			V.add(new Vertice(a,bilancio));
 		}
