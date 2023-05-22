@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
+
 import it.polito.tdp.itunes.model.Album;
 import it.polito.tdp.itunes.model.Artist;
 import it.polito.tdp.itunes.model.Genre;
@@ -16,9 +18,11 @@ import it.polito.tdp.itunes.model.Track;
 
 public class ItunesDAO {
 	
-	public List<Album> getAllAlbums(){
-		final String sql = "SELECT * FROM Album";
-		List<Album> result = new LinkedList<>();
+	TreeMap<Integer, Album> AlbumId;
+	
+	public TreeMap<Integer, Album> getAllAlbums(){
+		final String sql = "SELECT album.AlbumId, Title, n FROM album JOIN (SELECT AlbumId, COUNT(*) AS n FROM track GROUP BY AlbumId) AS tab ON album.AlbumId = tab.AlbumId";
+		AlbumId = new TreeMap<>();
 		
 		try {
 			Connection conn = DBConnect.getConnection();
@@ -26,14 +30,15 @@ public class ItunesDAO {
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.add(new Album(res.getInt("AlbumId"), res.getString("Title")));
+				Album a = new Album(res.getInt("AlbumId"), res.getString("Title"), res.getInt("n"));
+				AlbumId.put(a.getAlbumId(), a);
 			}
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("SQL Error");
 		}
-		return result;
+		return AlbumId;
 	}
 	
 	public List<Artist> getAllArtists(){
@@ -138,5 +143,27 @@ public class ItunesDAO {
 		}
 		return result;
 	}
+	
+	/*public List<Album> getVertex(int x){
+			String sql = "SELECT AlbumId, COUNT(*) AS n FROM track GROUP BY AlbumId HAVING n>? ORDER BY n DESC";
+			List<Album> result = new LinkedList<>();
+			
+			try {
+				Connection conn = DBConnect.getConnection();
+				PreparedStatement st = conn.prepareStatement(sql);
+				st.setInt(1, x);
+				ResultSet res = st.executeQuery();
+
+				while (res.next()) {
+					if(res.getInt("n"))
+					result.add(new Album(res.getInt("AlbumId"), res.getString("Title")));
+				}
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("SQL Error");
+			}
+			return result;
+	}*/
 	
 }

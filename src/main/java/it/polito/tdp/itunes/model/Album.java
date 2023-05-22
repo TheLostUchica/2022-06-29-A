@@ -3,11 +3,13 @@ package it.polito.tdp.itunes.model;
 public class Album {
 	private Integer albumId;
 	private String title;
+	private int count;
 	
-	public Album(Integer albumId, String title) {
+	public Album(Integer albumId, String title, int count) {
 		super();
 		this.albumId = albumId;
 		this.title = title;
+		this.count = count;
 	}
 
 	public Integer getAlbumId() {
@@ -20,6 +22,10 @@ public class Album {
 
 	public String getTitle() {
 		return title;
+	}
+	
+	public int getCount() {
+		return this.count;
 	}
 
 	public void setTitle(String title) {
