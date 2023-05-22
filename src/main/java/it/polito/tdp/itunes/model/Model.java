@@ -1,5 +1,6 @@
 package it.polito.tdp.itunes.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,17 +47,32 @@ public class Model {
 	public List<Vertice> getAdiacenze(Album al){
 		List<Vertice> V = new LinkedList<>();
 		for (Album a : Graphs.successorListOf(this.graph, al)) {
-			int bilancio = 0;
+			/*int bilancio = 0;
 			for (DefaultWeightedEdge e : graph.outgoingEdgesOf(a)) {
 				bilancio -= graph.getEdgeWeight(e);
 			}
 			for (DefaultWeightedEdge e : graph.incomingEdgesOf(a)) {
 				bilancio += graph.getEdgeWeight(e);
 			}
-			V.add(new Vertice(a,bilancio));
+			V.add(new Vertice(a,bilancio));*/
+			V.add(new Vertice(a, this.getBilancio(a)));
 		}
 		Collections.sort(V);
 		return V;
+	}
+	
+	private int getBilancio(Album a) {
+		int bilancio = 0;
+		List<DefaultWeightedEdge> edgesIN = new ArrayList<>(this.graph.incomingEdgesOf(a));
+		List<DefaultWeightedEdge> edgesOUT = new ArrayList<>(this.graph.outgoingEdgesOf(a));
+		
+		for (DefaultWeightedEdge edge : edgesIN)
+			bilancio += this.graph.getEdgeWeight(edge);
+		
+		for (DefaultWeightedEdge edge : edgesOUT)
+			bilancio -= this.graph.getEdgeWeight(edge);
+		
+		return bilancio;		
 	}
 	
 }
