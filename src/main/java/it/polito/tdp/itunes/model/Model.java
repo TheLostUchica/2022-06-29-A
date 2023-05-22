@@ -34,7 +34,7 @@ public class Model {
 		for (Album v1 : graph.vertexSet()) {
 			for (Album v2 : graph.vertexSet()) {
 				if(v1.getCount()>v2.getCount()) {
-					Graphs.addEdgeWithVertices(this.graph,v1, v2, v1.getCount()-v2.getCount());
+					Graphs.addEdgeWithVertices(this.graph,v2, v1, v1.getCount()-v2.getCount());
 				}
 			}
 		}
@@ -58,6 +58,7 @@ public class Model {
 			V.add(new Vertice(a, this.getBilancio(a)));
 		}
 		Collections.sort(V);
+		Collections.reverse(V);
 		return V;
 	}
 	
@@ -74,5 +75,66 @@ public class Model {
 		
 		return bilancio;		
 	}
+	
+	private LinkedList<Album> best;
+	private LinkedList<Album> parziale;
+	private int x;
+	private int Pb;
+	private Album arrivo;
+	int billone = 0;
+	
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	public void setPb(Album a) {
+		this.Pb = getBilancio(a);
+	}
+	
+	public void setArrivo(Album a) {
+		this.arrivo = a;
+	}
+	
+	public void getPath(Album partenza, Album arrivo) {
+		parziale = new LinkedList<>();
+		best = new LinkedList<>();
+		parziale.add(partenza);
+		int billy = 0;
+		this.setPb(partenza);
+		this.setArrivo(arrivo);
+		ricorsione(parziale, billy);
+	}
+	
+	private void ricorsione(LinkedList<Album> parziale, int billy) {
+		
+		if(parziale.contains(arrivo)) {
+			if(billy>billone) {
+				billone = billy;
+				best = new LinkedList<>(parziale);
+				return;
+			}
+			return;
+		}
+		else {
+			for (Album a : Graphs.successorListOf(this.graph, parziale.getLast())) {
+				if(graph.getEdgeWeight(graph.getEdge(parziale.getLast(), a))>=x) {
+					parziale.add(a);
+					if (getBilancio(a)>this.Pb) {
+						billy++;
+					}
+					ricorsione(parziale, billy);
+					parziale.pollLast();
+					billy--;
+				}
+			}
+		}
+	}
+	
+	public LinkedList<Album> getBest(){
+		return this.best;
+	}
+	
+	
+	
 	
 }

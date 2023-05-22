@@ -10,6 +10,10 @@ public class Vertice implements Comparable<Vertice>{
 		this.album = album;
 		this.bilancio = bilancio;
 	}
+	
+	public Album getAlbum() {
+		return this.album;
+	}
 
 	@Override
 	public String toString() {

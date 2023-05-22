@@ -5,6 +5,9 @@
 package it.polito.tdp.itunes;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import it.polito.tdp.itunes.model.Album;
 import it.polito.tdp.itunes.model.Model;
@@ -62,7 +65,23 @@ public class FXMLController {
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
+    	this.txtResult.clear();
+    	Album partenza = this.cmbA1.getValue();
+    	Album arrivo = this.cmbA2.getValue();
+    	String s = this.txtX.getText();
     	
+    	if(partenza!=null && arrivo!=null && s!="") {
+    		try {
+    			int x = Integer.parseInt(s);
+    			model.setX(x);
+        		model.getPath(partenza, arrivo);
+    		}catch(NumberFormatException e) {
+    			this.txtResult.setText("Numero inserito nel formato sbagliato");
+    		}
+    		for (Album a : model.getBest()) {
+    			this.txtResult.appendText("\n"+a.toString());
+    		}
+    	}
     }
 
     @FXML
@@ -99,7 +118,9 @@ public class FXMLController {
     }
     
     public void setCombos() {
-    	for(Album a : model.getGrafo().vertexSet()) {
+    	List<Album> albumi = new LinkedList<>(model.getGrafo().vertexSet());
+    	Collections.sort(albumi);
+    	for(Album a : albumi) {
     		this.cmbA1.getItems().add(a);
     		this.cmbA2.getItems().add(a);
     	}
