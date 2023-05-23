@@ -64,7 +64,7 @@ public class Album implements Comparable<Album>{
 
 	@Override
 	public int compareTo(Album o) {
-		return this.getTitle().compareTo(this.getTitle());
+		return this.getTitle().compareTo(o.getTitle());
 	}
 	
 	

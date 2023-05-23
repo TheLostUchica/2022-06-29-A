@@ -123,9 +123,8 @@ public class FXMLController {
     public void setCombos() {
     	LinkedList<Album> albumi = new LinkedList<>(model.getGrafo().vertexSet());
     	Collections.sort(albumi);
-    	for(Album a : albumi) {
-    		this.cmbA1.getItems().add(a);
-    		this.cmbA2.getItems().add(a);
-    	}
+		this.cmbA1.getItems().addAll(albumi);
+		this.cmbA2.getItems().addAll(albumi);
+    	
     }
 }
